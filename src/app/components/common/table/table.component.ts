@@ -31,12 +31,12 @@ import {
 } from '@core/constant/common.const';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
-import { TruncatePipe } from '@core/pipes/truncate.pipe';
+import { LineClampDirective } from '@core/directives/line-clamp.directive';
 
 @Component({
   selector: 'app-common-table',
   standalone: true,
-  imports: [TableModule, CommonModule, TooltipModule, TruncatePipe],
+  imports: [TableModule, CommonModule, TooltipModule, LineClampDirective],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -136,7 +136,7 @@ export class TableComponent implements OnChanges {
    * @description the flag to indicate if the table is sorted.
    * @type {boolean}
    */
-  @Input() isSorted = signal<boolean | null>(null);
+  @Input() isSorted: boolean | null = null;
 
   /**
    * @description The name of the column used for order numbers.
@@ -164,10 +164,14 @@ export class TableComponent implements OnChanges {
   bodyTableType = input<bodyTableType>('default');
 
   initDataSources = signal<unknown[]>([]);
+  isSortColumn: boolean | null | undefined = null;
 
   ngOnChanges(changes: SimpleChanges): void {
     // Handle changes to input properties here
     console.log('Changes detected:', changes);
+    if (changes['data'] && changes['data'].currentValue) {
+      this.initDataSources.set(changes['data'].currentValue);
+    }
   }
 
   onClickRecord(rowData: unknown): void {
@@ -194,14 +198,14 @@ export class TableComponent implements OnChanges {
   }
 
   onSort(event: SortEvent): void {
-    if (this.isSorted() == null || this.isSorted() === undefined) {
-      this.isSorted.set(true);
+    if (this.isSortColumn == null || this.isSortColumn === undefined) {
+      this.isSortColumn = true;
       this.sortTableData(event);
-    } else if (this.isSorted() == true) {
-      this.isSorted.set(false);
+    } else if (this.isSortColumn == true) {
+      this.isSortColumn = false;
       this.sortTableData(event);
-    } else if (this.isSorted() == false) {
-      this.isSorted.set(null);
+    } else if (this.isSortColumn == false) {
+      this.isSortColumn = null;
       this.data = [...this.initDataSources()];
       this.dt.reset();
     }

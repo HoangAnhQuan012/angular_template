@@ -47,7 +47,10 @@ export const TokenInterceptor = (
   });
   return next(newReq).pipe(
     catchError(err => {
-      if (err instanceof HttpErrorResponse && err.status === HTTP_STATUS_ERROR_NAME.FORBIDDEN) {
+      if (
+        err instanceof HttpErrorResponse &&
+        err.status === HTTP_STATUS_ERROR_NAME.FORBIDDEN
+      ) {
         return handleRefreshToken(err, req, next, authToken);
       }
       return errorHanlder.handleError(err);

@@ -6,5 +6,11 @@ export const routes: Routes = [
     path: '',
     component: DemoTableComponent,
     pathMatch: 'full',
-  }
+    title: 'Something',
+  },
+  {
+    path: 'demo-table',
+    component: DemoTableComponent,
+    title: 'Demo table',
+  },
 ];

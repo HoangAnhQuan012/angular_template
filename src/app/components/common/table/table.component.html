@@ -10,7 +10,7 @@
   (onRowUnselect)="onRowUnselect($event)"
   (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
   (sortFunction)="onSort($event)"
-  [customSort]="isSorted()"
+  [customSort]="isSorted"
   [dataKey]="dataKey()"
   [rowHover]="true">
   <ng-template pTemplate="header">
@@ -35,7 +35,7 @@
           }
 
           @for (col of columns(); track $index) {
-            @if (isSorted()) {
+            @if (isSorted && col?.sortable) {
               <th
                 [pSortableColumn]="col['field'] || ''"
                 id="th2{{ $index }}"
@@ -113,10 +113,10 @@
               </ng-container>
               <ng-template #defaultTemplate>
                 <span
+                  [appLineClamp]="col?.maxLines || 1"
+                  style="width: 100%; min-width: 0"
                   class="{{
-                    col?.['customTdClass']
-                      ? col?.['customTdClass']
-                      : 'break-word'
+                    col?.['customTdClass'] ? col?.['customTdClass'] : ''
                   }}"
                   pTooltip="{{
                     isDate(rowData[col.field])
@@ -129,7 +129,7 @@
                     {{ rowData[col.field] | date: col.dateFormat }}
                   </ng-container>
                   <ng-template #truncateTemplate>
-                    {{ rowData[col.field] | truncate: col.maxLength }}
+                    {{ rowData[col.field] }}
                   </ng-template>
                 </span>
               </ng-template>

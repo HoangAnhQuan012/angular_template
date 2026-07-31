@@ -17,7 +17,13 @@ export enum HTTP_STATUS_ERROR_NAME {
   CONFLICT = 409,
   INTERNAL_SERVER_ERROR = 500,
   SERVICE_UNAVAILABLE = 503,
-  GATEWAY_TIMEOUT = 504
+  GATEWAY_TIMEOUT = 504,
   // Add more if needed
 }
 
+export const PATTERN_CONSTANTS = {
+  ONLY_LETTERS_AND_SPACES: '^[a-zA-Z ]+$',
+  ONLY_NUMBERS: '^[0-9]+$',
+  ONLY_LETTERS_AND_NUMBERS: '^[a-zA-Z0-9]+$',
+  // Add more if needed
+};

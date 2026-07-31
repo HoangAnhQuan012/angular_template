@@ -15,6 +15,7 @@ export interface IColumnsDefinition {
   thRowSpan?: number;
   maxLength?: number;
   dateFormat?: string;
+  maxLines?: number;
   [key: string]: unknown;
 }
 

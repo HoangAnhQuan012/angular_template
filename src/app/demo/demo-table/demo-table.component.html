@@ -9,7 +9,9 @@
       [selectedRows]="selectedRows()"
       (onEmitSelectedRows)="selectedRows.set($event)"
       (onEmitRecord)="onEmitRecord($event)"
-      [isClickRecord]="true"></app-common-table>
+      [isClickRecord]="true"
+      [isSorted]="true"
+      [dataKey]="'name'"></app-common-table>
 
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
       <h1>{{ 'DEMO.TEXT_INPUT_VALIDATOR' | translate }}</h1>
@@ -23,24 +25,24 @@
           [formGroup]="formGroup"
           [controlKey]="'name'"></app-message-validator>
 
-          <p-button label="Language" (onClick)="onChangeLang($event)"/>
+        <p-button label="Language" (onClick)="onChangeLang($event)" />
+        <p-button type="submit" label="Submit" />
       </div>
     </form>
   </div>
   <ng-template #actionTemplate let-rowData="rowData">
     <!-- <div class="flex justify-content-center align-items-center gap-2"> -->
-      <!-- <i class="pi pi-pencil" (onClick)="onEdit(rowData, $event)"></i>
+    <!-- <i class="pi pi-pencil" (onClick)="onEdit(rowData, $event)"></i>
       <i class="pi pi-trash" (onClick)="onDelete(rowData, $event)"></i> -->
 
-      <span class="flex justify-content-center gap-2">
-        <p-button class="accept" (onClick)="onEdit(rowData, $event)"
-          >Edit</p-button
-        >
-        <p-button class="reject" (onClick)="onDelete(rowData, $event)"
-          >Delete</p-button
-        >
-      </span>
+    <span class="flex justify-content-center gap-2">
+      <p-button class="accept" (onClick)="onEdit(rowData, $event)"
+        >Edit</p-button
+      >
+      <p-button class="reject" (onClick)="onDelete(rowData, $event)"
+        >Delete</p-button
+      >
+    </span>
     <!-- </div> -->
   </ng-template>
 </app-main-layout>
-

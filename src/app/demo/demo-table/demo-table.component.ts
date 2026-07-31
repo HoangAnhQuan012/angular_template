@@ -23,6 +23,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ButtonModule } from 'primeng/button';
 import { AppComponentBase } from '@shared/app-component-base';
+import { PATTERN_CONSTANTS } from '@core/constant/common.const';
 
 @Component({
   selector: 'app-demo-table',
@@ -40,7 +41,7 @@ import { AppComponentBase } from '@shared/app-component-base';
   ],
   templateUrl: './demo-table.component.html',
   styleUrl: './demo-table.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoTableComponent extends AppComponentBase implements OnInit {
   @ViewChild('actionTemplate', { static: true })
@@ -54,11 +55,36 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
       age: 25,
       time: new Date(),
     },
-    { id: 2, name: 'Jane Smith', age: 30, time: new Date() },
-    { id: 3, name: 'Alice Johnson', age: 28, time: new Date() },
-    { id: 4, name: 'Bob Brown', age: 35, time: new Date() },
-    { id: 5, name: 'Charlie Davis', age: 22, time: new Date() },
-    { id: 6, name: 'Eve Adams', age: 27, time: new Date() },
+    {
+      id: 2,
+      name: 'Jane Smith Jane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane Smith',
+      age: 30,
+      time: new Date(),
+    },
+    {
+      id: 3,
+      name: 'Alice Johnson Jane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane Smith',
+      age: 28,
+      time: new Date(),
+    },
+    {
+      id: 4,
+      name: 'Bob Brown Jane SmithJane SmithJane SmithJane SmithJane SmithJane Smith',
+      age: 35,
+      time: new Date(),
+    },
+    {
+      id: 5,
+      name: 'Charlie Davis Jane SmithJane SmithJane SmithJane SmithJane SmithJane Smith',
+      age: 22,
+      time: new Date(),
+    },
+    {
+      id: 6,
+      name: 'Eve Adams Jane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane SmithJane Smith',
+      age: 27,
+      time: new Date(),
+    },
     { id: 7, name: 'Frank Miller', age: 32, time: new Date() },
     { id: 8, name: 'Grace Lee', age: 29, time: new Date() },
     { id: 9, name: 'Hank Wilson', age: 31, time: new Date() },
@@ -71,7 +97,7 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
   translateService = inject(TranslateService);
 
   formGroup!: FormGroup;
-  isVi: boolean = false;
+  isVi = false;
   languageOptions = signal<{ label: string; value: boolean }[]>([
     { label: 'English', value: false },
     { label: 'Tiếng Việt', value: true },
@@ -92,6 +118,7 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
         thColSpan: 1,
         tdColSpan: 2,
         maxLength: 80,
+        maxLines: 2,
       },
       {
         field: 'age',
@@ -100,6 +127,8 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
         maxWidth: '100px',
         thColSpan: 1,
         tdColSpan: 1,
+        sortable: true,
+        maxLines: 2,
       },
       {
         field: 'time',
@@ -109,6 +138,7 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
         thColSpan: 1,
         tdColSpan: 1,
         dateFormat: 'dd/MM/yyyy HH:mm',
+        maxLines: 2,
       },
       {
         field: 'actions',
@@ -118,14 +148,22 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
         thColSpan: 1,
         tdColSpan: 1,
         customTemplate: this.actionTemplate,
+        maxLines: 2,
       },
     ]);
   }
 
   private initForm(): void {
     this.formGroup = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(20)]],
-      language: [false],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(20),
+          Validators.minLength(3),
+          Validators.pattern(PATTERN_CONSTANTS.ONLY_LETTERS_AND_SPACES),
+        ],
+      ],
     });
   }
 
@@ -135,15 +173,17 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
 
   onSubmit(): void {
     console.log('Form submitted:', this.formGroup.value);
+    this.showSuccessMessage('Submit successfully!');
   }
 
   onChangeLang(event: MouseEvent) {
+    console.log(event);
     this.isVi = !this.isVi;
     const lang = this.isVi ? 'vi' : 'en';
     this.translateService.use(lang);
   }
 
-  onEdit(record: unknown, event: any): void {
+  onEdit(record: unknown, event: MouseEvent): void {
     event?.stopPropagation();
     const index = this.data().findIndex(item => item === record);
     if (index !== -1) {
@@ -159,7 +199,7 @@ export class DemoTableComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  onDelete(record: unknown, event?: any): void {
+  onDelete(record: unknown, event?: MouseEvent): void {
     event?.stopPropagation();
     const index = this.data().findIndex(item => item === record);
     if (index !== -1) {
